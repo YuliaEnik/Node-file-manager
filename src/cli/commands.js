@@ -9,6 +9,7 @@ import {
   moveFile, 
   deleteFile 
 } from '../utils/files.js';
+import { getOSInfo } from '../utils/os.js';
 
 const exitCommands = new Set(['.exit', 'exit', 'quit', 'q', ':q', 'stop']);
 
@@ -61,6 +62,10 @@ export const handleCommand = async (command,args, gracefulExit) => {
       case 'rm':
         await handleRm(args[0]);
         break;
+
+      case 'os':
+        await handleOs(args[0]);
+        break;  
       
       case '':
         break;
@@ -143,4 +148,13 @@ const handleRm = async (filePath) => {
     throw new Error('Invalid input');
   }
   await deleteFile(filePath);
+};
+
+const handleOs = async (flag) => {
+  if (!flag) {
+    throw new Error('Invalid input');
+  }
+  
+  const result = getOSInfo(flag);
+  console.log(result);
 };
