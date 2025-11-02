@@ -1,5 +1,14 @@
 import { navigateUp, changeDirectory, getCurrentDirectory } from '../utils/navigation.js';
-import { listDirectory } from '../utils/files.js';
+import { 
+  listDirectory, 
+  readFile, 
+  createFile, 
+  createDirectory, 
+  renameFile, 
+  copyFile, 
+  moveFile, 
+  deleteFile 
+} from '../utils/files.js';
 
 const exitCommands = new Set(['.exit', 'exit', 'quit', 'q', ':q', 'stop']);
 
@@ -23,6 +32,34 @@ export const handleCommand = async (command,args, gracefulExit) => {
       
       case 'ls':
         await handleLs();
+        break;
+
+       case 'cat':
+        await handleCat(args[0]);
+        break;
+      
+      case 'add':
+        await handleAdd(args[0]);
+        break;
+      
+      case 'mkdir':
+        await handleMkdir(args[0]);
+        break;
+      
+      case 'rn':
+        await handleRn(args[0], args[1]);
+        break;
+      
+      case 'cp':
+        await handleCp(args[0], args[1]);
+        break;
+      
+      case 'mv':
+        await handleMv(args[0], args[1]);
+        break;
+      
+      case 'rm':
+        await handleRm(args[0]);
         break;
       
       case '':
@@ -57,4 +94,53 @@ const handleLs = async () => {
   } else {
     console.log('Directory is empty');
   }
+};
+
+const handleCat = async (filePath) => {
+  if (!filePath) {
+    throw new Error('Invalid input');
+  }
+  await readFile(filePath);
+};
+
+const handleAdd = async (fileName) => {
+  if (!fileName) {
+    throw new Error('Invalid input');
+  }
+  await createFile(fileName);
+};
+
+const handleMkdir = async (dirName) => {
+  if (!dirName) {
+    throw new Error('Invalid input');
+  }
+  await createDirectory(dirName);
+};
+
+const handleRn = async (oldPath, newName) => {
+  if (!oldPath || !newName) {
+    throw new Error('Invalid input');
+  }
+  await renameFile(oldPath, newName);
+};
+
+const handleCp = async (srcPath, destPath) => {
+  if (!srcPath || !destPath) {
+    throw new Error('Invalid input');
+  }
+  await copyFile(srcPath, destPath);
+};
+
+const handleMv = async (srcPath, destPath) => {
+  if (!srcPath || !destPath) {
+    throw new Error('Invalid input');
+  }
+  await moveFile(srcPath, destPath);
+};
+
+const handleRm = async (filePath) => {
+  if (!filePath) {
+    throw new Error('Invalid input');
+  }
+  await deleteFile(filePath);
 };
