@@ -10,6 +10,7 @@ import {
   deleteFile 
 } from '../utils/files.js';
 import { getOSInfo } from '../utils/os.js';
+import { calculateFileHash } from '../utils/hash.js';
 
 const exitCommands = new Set(['.exit', 'exit', 'quit', 'q', ':q', 'stop']);
 
@@ -65,6 +66,9 @@ export const handleCommand = async (command,args, gracefulExit) => {
 
       case 'os':
         await handleOs(args[0]);
+        break;  
+      case 'hash':
+        await handleHash(args[0]);
         break;  
       
       case '':
@@ -162,4 +166,13 @@ const handleOs = async (flag) => {
   
   const result = getOSInfo(flag);
   console.log(result);
+};
+
+const handleHash = async (filePath) => {
+  if (!filePath) {
+    throw new Error('Invalid input');
+  }
+  
+  const hash = await calculateFileHash(filePath);
+  console.log(`File hash (SHA-256): ${hash}`);
 };
