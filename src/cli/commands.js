@@ -11,6 +11,7 @@ import {
 } from '../utils/files.js';
 import { getOSInfo } from '../utils/os.js';
 import { calculateFileHash } from '../utils/hash.js';
+import { compressFile, decompressFile } from '../utils/compression.js';
 
 const exitCommands = new Set(['.exit', 'exit', 'quit', 'q', ':q', 'stop']);
 
@@ -67,11 +68,20 @@ export const handleCommand = async (command,args, gracefulExit) => {
       case 'os':
         await handleOs(args[0]);
         break;  
+        
       case 'hash':
         await handleHash(args[0]);
         break;  
       
       case '':
+        break;
+
+      case 'compress':
+        await handleCompress(args[0], args[1]);
+        break;
+
+      case 'decompress':
+        await handleDecompress(args[0], args[1]);
         break;
       
       default:
@@ -175,4 +185,20 @@ const handleHash = async (filePath) => {
   
   const hash = await calculateFileHash(filePath);
   console.log(`File hash (SHA-256): ${hash}`);
+};
+
+const handleCompress = async (srcPath, destPath) => {
+  if (!srcPath || !destPath) {
+    throw new Error('Invalid input');
+  }
+  await compressFile(srcPath, destPath);
+  console.log(`File compressed successfully: ${srcPath} -> ${destPath}`);
+};
+
+const handleDecompress = async (srcPath, destPath) => {
+  if (!srcPath || !destPath) {
+    throw new Error('Invalid input');
+  }
+  await decompressFile(srcPath, destPath);
+  console.log(`File decompressed successfully: ${srcPath} -> ${destPath}`);
 };
