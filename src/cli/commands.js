@@ -71,10 +71,15 @@ export const handleCommand = async (command,args, gracefulExit) => {
         break;
       
       default:
-        console.log('Invalid input');
+        throw new Error('Invalid input');
+
     }
   } catch (error) {
-    console.log(error.message);
+    if (error.message === 'Invalid input') {
+      console.log('Invalid input');
+    } else {
+      console.log('Operation failed');
+    }
   }
   
   console.log(`You are currently in ${getCurrentDirectory()}`);
